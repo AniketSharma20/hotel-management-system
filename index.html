@@ -692,23 +692,56 @@
 
         /* ── Hero section ──────────────────────────────── */
         @media (max-width: 768px) {
-            .hero-section { min-height: auto; gap: 1.5rem; padding-top: 1rem; }
+            .hero-section { min-height: auto; gap: 1.5rem; padding-top: 1rem; padding-bottom: 0.5rem; }
             .hero-title   { font-size: 2.2rem; }
             .hero-subtitle { font-size: 1rem; }
-            .hero-image-wrapper { height: 220px; width: 100%; }
+            .hero-image-wrapper {
+                height: auto !important;
+                min-height: 200px;
+                width: 100%;
+                flex-direction: column !important;
+                justify-content: flex-end !important;
+                overflow: hidden !important;
+                padding-bottom: 0 !important;
+            }
             .hero-actions { flex-wrap: wrap; gap: 0.75rem; }
             .btn-large { padding: 0.7rem 1.4rem; font-size: 0.95rem; }
-            .stats-card { gap: 0.75rem; padding: 1rem; font-size: 0.85rem; }
-            .stat h3 { font-size: 1.1rem; }
         }
         @media (max-width: 480px) {
-            .hero-title   { font-size: 1.8rem; }
-            .hero-image-wrapper { height: 180px; }
+            .hero-title { font-size: 1.8rem; }
+        }
+
+        /* ══════════════════════════════════════════════════
+           CRITICAL FIX: Stats card overlaps hero buttons
+           It's position:absolute; bottom:-30px — bleeds out
+           of the image wrapper on mobile.
+           Fix: make it static, pin it to the image bottom.
+           ══════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .stats-card {
+                position: static !important;
+                bottom: auto !important;
+                right: auto !important;
+                left: auto !important;
+                width: 100% !important;
+                justify-content: space-around !important;
+                margin: 0 !important;
+                border-radius: 0 0 12px 12px !important;
+                background: rgba(10, 8, 5, 0.85) !important;
+                backdrop-filter: blur(12px) !important;
+                padding: 0.6rem 1rem !important;
+                gap: 0 !important;
+                box-shadow: none !important;
+            }
+            .stat h3 { font-size: 1rem !important; }
+            .stat p   { font-size: 0.7rem !important; }
+            /* Clear space below hero so quick-access never overlaps */
+            .quick-access { margin-top: 1.5rem !important; }
         }
 
         /* ── Quick access grid ─────────────────────────── */
         @media (max-width: 600px) {
-            .quick-access { grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+            .quick-access { grid-template-columns: 1fr 1fr; gap: 1rem; }
             .qa-card { padding: 1.25rem 1rem; }
             .qa-card i { font-size: 1.8rem; }
             .qa-card h3 { font-size: 1rem; }
@@ -796,11 +829,22 @@
     (function() {
         'use strict';
 
-        // ⚠️ Use your PC's local network IP so phones on the same Wi-Fi can connect.
-        // Run `ipconfig` (Windows) to find your IPv4 address if this changes.
-        const API_BASE = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
-            ? 'http://127.0.0.1:5000'          // desktop browser
-            : 'http://192.168.1.7:5000';        // phone / tablet on same Wi-Fi
+        // Auto-detect environment:
+        //   - Local dev  → use 127.0.0.1:5000
+        //   - Same Wi-Fi → use 192.168.1.7:5000
+        //   - Vercel/any other host → try same origin /api/concierge-chat first,
+        //     then fallback to the PC IP (update this if you deploy the backend)
+        const hostname = window.location.hostname;
+        let API_BASE;
+        if (hostname === '127.0.0.1' || hostname === 'localhost') {
+            API_BASE = 'http://127.0.0.1:5000';
+        } else if (hostname === '192.168.1.7') {
+            API_BASE = 'http://192.168.1.7:5000';
+        } else {
+            // Deployed (e.g. Vercel) — point to your backend server IP/domain
+            // TODO: Replace with your deployed backend URL e.g. https://your-backend.onrender.com
+            API_BASE = 'http://192.168.1.7:5000';
+        }
         const API_URL  = API_BASE + '/api/concierge-chat';
         const panel    = document.getElementById('concierge-panel');
         const fab      = document.getElementById('concierge-fab');
