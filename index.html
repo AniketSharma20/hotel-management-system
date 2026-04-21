@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Grand Aurelia | Luxury Hotel & Resort</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/rooms.css">
+    <link rel="stylesheet" href="css/services.css">
+    <link rel="stylesheet" href="css/sos.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Socket.IO Client -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body class="dark-theme">
+    
+    <!-- Background Elements -->
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="brand">
+            <span class="brand-icon"><i class="fa-solid fa-crown"></i></span>
+            <h1>The Grand Aurelia</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="javascript:void(0)" class="active" data-target="dashboard"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="javascript:void(0)" data-target="rooms"><i class="fa-solid fa-bed"></i> Rooms & Suites</a></li>
+            <li><a href="javascript:void(0)" data-target="dining"><i class="fa-solid fa-utensils"></i> In-Room Dining</a></li>
+            <li><a href="javascript:void(0)" data-target="services"><i class="fa-solid fa-concierge-bell"></i> Services</a></li>
+            <li><a href="javascript:void(0)" data-target="bookings"><i class="fa-solid fa-calendar-check"></i> My Bookings</a></li>
+            <li><a href="javascript:void(0)" data-target="contact"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
+            <li><a href="javascript:void(0)" data-target="admin" style="color: var(--gold)"><i class="fa-solid fa-lock"></i> Admin</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="btn-icon" id="cart-btn">
+                <i class="fa-solid fa-shopping-cart"></i>
+                <span class="badge" id="cart-badge">0</span>
+            </button>
+            <button class="btn-primary" id="login-btn">Sign In</button>
+        </div>
+        <div class="mobile-menu-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="app-container">
+        
+        <!-- View: Dashboard / Home -->
+        <section id="dashboard" class="view active-view">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h2 class="hero-title">Experience <span>Unrivaled</span> Luxury</h2>
+                    <p class="hero-subtitle">Your perfect getaway is just a booking away. Indulge in world-class amenities and exquisite dining.</p>
+                    <div class="hero-actions">
+                        <button class="btn-primary btn-large" onclick="app.nav.switchTo('rooms')">Book Your Stay</button>
+                        <button class="btn-secondary btn-large" onclick="app.nav.switchTo('dining')">Explore Menu</button>
+                    </div>
+                </div>
+                <div class="hero-image-wrapper" id="hero-slider" style="background-image: url('assets/hotel_hero.png'); transition: background-image 1s ease-in-out;">
+                    <!-- We will use JS to swap backgrounds -->
+                    <div class="glass-card stats-card" style="animation: slideUp 1s ease forwards;">
+                        <div class="stat">
+                            <h3 id="stat-rooms">0+</h3>
+                            <p>Premium Rooms</p>
+                        </div>
+                        <div class="stat">
+                            <h3>5 <i class="fa-solid fa-star" style="color: var(--gold)"></i></h3>
+                            <p>Global Rating</p>
+                        </div>
+                        <div class="stat">
+                            <h3>24/7</h3>
+                            <p>Concierge</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access Grid -->
+            <div class="quick-access">
+                <div class="qa-card" onclick="app.nav.switchTo('rooms')">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <h3>Book a Room</h3>
+                    <p>Find your perfect space.</p>
+                </div>
+                <div class="qa-card" onclick="app.nav.switchTo('dining')">
+                    <i class="fa-solid fa-burger"></i>
+                    <h3>Order Food</h3>
+                    <p>Gourmet meals to your room.</p>
+                </div>
+                <div class="qa-card" onclick="app.nav.switchTo('services')">
+                    <i class="fa-solid fa-spa"></i>
+                    <h3>Spa & Wellness</h3>
+                    <p>Relax and rejuvenate.</p>
+                </div>
+                <div class="qa-card" onclick="app.nav.switchTo('services')">
+                    <i class="fa-solid fa-broom"></i>
+                    <h3>Housekeeping</h3>
+                    <p>Request room cleaning.</p>
+                </div>
+            </div>
+
+            <!-- Dashboard Highlights -->
+            <div class="dashboard-highlights glass-panel" style="margin-top: 2rem; padding: 3rem; border-radius: 12px; display: flex; align-items: center; gap: 3rem;">
+                <div style="flex: 1;">
+                    <h3 style="font-size: 2rem; color: var(--gold); margin-bottom: 1rem; font-family: 'Playfair Display', serif;">A Class Apart</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; font-size: 1.1rem;">
+                        At The Grand Aurelia, we redefine elegance. Enjoy bespoke services, stunning ocean views, and award-winning dining curated by our Michelin-starred chefs. From the moment you arrive, you'll experience a world of comfort and luxury.
+                    </p>
+                    <button class="btn-outline" onclick="app.nav.switchTo('contact')">Learn More About Us</button>
+                </div>
+                <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <img src="assets/room2.jpg" style="width: 100%; border-radius: 8px; height: 180px; object-fit: cover;" alt="Hotel Lobby">
+                    <img src="assets/food2.jpg" style="width: 100%; border-radius: 8px; height: 180px; object-fit: cover;" alt="Dining">
+                </div>
+            </div>
+            <style>
+                @media(max-width: 900px){
+                    .dashboard-highlights {
+                        flex-direction: column;
+                        text-align: center;
+                    }
+                }
+            </style>
+        </section>
+
+        <!-- View: Rooms -->
+        <section id="rooms" class="view">
+            <div class="section-header">
+                <h2>Rooms & Suites</h2>
+                <p>Discover our opulent accommodations tailored for your comfort.</p>
+            </div>
+            
+            <div class="booking-bar glass-panel">
+                <div class="input-group">
+                    <label>Check In</label>
+                    <input type="date" id="check-in-date">
+                </div>
+                <div class="input-group">
+                    <label>Check Out</label>
+                    <input type="date" id="check-out-date">
+                </div>
+                <div class="input-group">
+                    <label>Guests</label>
+                    <select id="guest-count">
+                        <option>1 Guest</option>
+                        <option>2 Guests</option>
+                        <option>3 Guests</option>
+                        <option>4+ Guests</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="app.rooms.search()">Check Availability</button>
+            </div>
+
+            <div class="rooms-grid" id="rooms-container">
+                <!-- Rendered by JS -->
+            </div>
+        </section>
+
+        <!-- View: Dining -->
+        <section id="dining" class="view">
+            <div class="section-header">
+                <h2>In-Room Dining</h2>
+                <p>Culinary masterpieces delivered right to your door.</p>
+            </div>
+
+            <div class="menu-filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="breakfast">Breakfast</button>
+                <button class="filter-btn" data-category="mains">Main Course</button>
+                <button class="filter-btn" data-category="desserts">Desserts</button>
+                <button class="filter-btn" data-category="drinks">Beverages</button>
+            </div>
+
+            <div class="menu-grid" id="menu-container">
+                <!-- Rendered by JS -->
+            </div>
+        </section>
+
+        <!-- View: Services -->
+        <section id="services" class="view">
+            <div class="section-header">
+                <h2>Guest Services</h2>
+                <p>Everything you need for an unforgettable stay.</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card glass-panel">
+                    <img src="assets/room1.jpg" alt="Spa" class="service-img">
+                    <div class="service-info">
+                        <h3>Aurelia Spa</h3>
+                        <p>Enjoy our signature massages and therapies.</p>
+                        <button class="btn-outline" onclick="app.ui.showToast('Request for Aurelia Spa sent. Our staff will contact you shortly.', 'success')">Book Session</button>
+                    </div>
+                </div>
+                <div class="service-card glass-panel">
+                    <img src="assets/room2.jpg" alt="Cleaning" class="service-img">
+                    <div class="service-info">
+                        <h3>Housekeeping</h3>
+                        <p>Request immediate room cleaning or turn-down service.</p>
+                        <button class="btn-outline" onclick="app.ui.showToast('Request for Housekeeping sent. Our staff will contact you shortly.', 'success')">Request Now</button>
+                    </div>
+                </div>
+                <div class="service-card glass-panel">
+                    <img src="assets/room5.jpg" alt="Laundry" class="service-img">
+                    <div class="service-info">
+                        <h3>Express Laundry</h3>
+                        <p>Same-day washing, pressing, and dry cleaning.</p>
+                        <button class="btn-outline" onclick="app.ui.showToast('Request for Express Laundry sent. Our staff will contact you shortly.', 'success')">Request Pickup</button>
+                    </div>
+                </div>
+                <div class="service-card glass-panel">
+                    <img src="assets/hotel_hero.png" alt="Concierge" class="service-img">
+                    <div class="service-info">
+                        <h3>Valet & Transport</h3>
+                        <p>Airport transfers and valet parking requests.</p>
+                        <button class="btn-outline" onclick="app.ui.showToast('Request for Valet & Transport sent. Our staff will contact you shortly.', 'success')">Contact Desk</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: My Bookings -->
+        <section id="bookings" class="view">
+            <div class="section-header">
+                <h2>My Bookings</h2>
+                <p>Manage your upcoming stays and current orders.</p>
+            </div>
+            <div id="bookings-container" class="glass-panel" style="padding: 2rem;">
+                <div id="empty-bookings-state" style="padding: 3rem 2rem; text-align: center; color: var(--text-muted)">
+                    <i class="fa-solid fa-calendar-xmark" style="font-size: 4rem; margin-bottom: 1.5rem; color: var(--gold)"></i>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);">No Active Bookings</h3>
+                    <p style="margin-bottom: 1.5rem;">You haven't booked any rooms yet.</p>
+                    <button class="btn-primary" onclick="app.nav.switchTo('rooms')">Browse Rooms</button>
+                </div>
+                <div id="active-bookings-list" style="display: none;">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Contact Us -->
+        <section id="contact" class="view">
+            <div class="section-header">
+                <h2>Contact Us</h2>
+                <p>We are here to assist you 24/7.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info glass-panel">
+                    <h3>Get in Touch</h3>
+                    <p><i class="fa-solid fa-location-dot"></i> 123 Aurelia Boulevard, Oceanview District</p>
+                    <p><i class="fa-solid fa-phone"></i> +1 (800) 555-0199</p>
+                    <p><i class="fa-solid fa-envelope"></i> reservations@grandaurelia.com</p>
+                    
+                    <h3 style="margin-top: 2rem;">Send a Message</h3>
+                    <form class="auth-form" onsubmit="event.preventDefault(); app.ui.showToast('Message sent! We will reply soon.', 'success'); this.reset();">
+                        <div class="input-group">
+                            <input type="text" placeholder="Your Name" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="input-group">
+                            <textarea placeholder="How can we help?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-100 mt-2">Send Message</button>
+                    </form>
+                </div>
+                <div class="contact-map glass-panel"></div>
+            </div>
+        </section>
+
+        <!-- View: Admin Panel -->
+        <section id="admin" class="view">
+            <div class="section-header">
+                <h2 style="color: #ff4757;">Manager Dashboard</h2>
+                <p>System Overview &amp; Booking Approvals &amp; Security Monitoring</p>
+            </div>
+
+            <!-- ░░ SOS EMERGENCY PANEL ░░ -->
+            <div id="sos-panel" style="margin-bottom: 2rem;">
+                <div class="sos-panel-header">
+                    <div class="sos-panel-title">
+                        <div class="sos-icon">
+                            <i class="fa-solid fa-triangle-exclamation" style="color: #ff4060; font-size: 0.9rem;"></i>
+                        </div>
+                        Real-Time SOS / Emergency Monitor
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                        <div id="sos-status-badge" class="sos-status-badge connecting">
+                            <div id="sos-status-dot" class="sos-status-dot"></div>
+                            <span id="sos-status-text">Connecting&hellip;</span>
+                        </div>
+                        <button id="sos-test-btn" class="sos-test-btn" title="Simulate a guest SOS for testing">
+                            <i class="fa-solid fa-bolt"></i> Test SOS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alert Feed -->
+                <div class="sos-alert-feed" id="sos-alert-feed">
+                    <div class="sos-empty-state" id="sos-empty-state">
+                        <i class="fa-solid fa-shield-halved" style="color: rgba(34,197,94,0.4);"></i>
+                        <p>All clear &mdash; No active emergency alerts.</p>
+                        <p style="font-size: 0.75rem;">Alerts appear here instantly when a guest triggers SOS.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- ░░ END SOS PANEL ░░ -->
+
+            <div class="admin-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                <div class="admin-sidebar glass-panel" style="padding: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--gold)">Controls</h3>
+                    <button class="btn-outline w-100" style="margin-bottom: 1rem; text-align: left;"><i class="fa-solid fa-bed"></i> Room Inventory</button>
+                    <button class="btn-outline w-100" style="margin-bottom: 1rem; text-align: left;"><i class="fa-solid fa-bell-concierge"></i> Service Requests <span class="badge" style="position:static; margin-left: 10px;">3</span></button>
+                    <button class="btn-outline w-100" style="margin-bottom: 1rem; text-align: left;"><i class="fa-solid fa-burger"></i> Food Orders</button>
+                    <button class="btn-outline w-100" style="margin-bottom: 1rem; text-align: left; color: #ff4060; border-color: rgba(255,60,80,0.3);" onclick="SOSModule.fireTest()">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Simulate SOS
+                    </button>
+                </div>
+                <div class="admin-content glass-panel" style="padding: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">Recent Booking Requests</h3>
+                    <div id="admin-requests-container">
+                        <p style="color: var(--text-muted);">No booking requests found.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ░░ SOS EMERGENCY BANNER (fixed top, shown on new alert) ░░ -->
+    <div id="sos-emergency-banner">
+        <div class="sos-banner-text">
+            <i class="fa-solid fa-triangle-exclamation sos-blink-icon"></i>
+            <span id="sos-banner-message">🚨 EMERGENCY ALERT — See Admin Dashboard</span>
+        </div>
+        <button class="sos-banner-dismiss" id="sos-banner-dismiss">
+            <i class="fa-solid fa-times"></i> Dismiss
+        </button>
+    </div>
+    <!-- ░░ END EMERGENCY BANNER ░░ -->
+
+    <!-- Cart Drawer Modal -->
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Your Order</h3>
+            <button class="btn-close" id="close-cart"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <!-- Rendered by JS -->
+            <p class="empty-cart">Your cart is empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">$0.00</span>
+            </div>
+            <div class="room-prompt input-group">
+                <input type="text" id="order-room-number" placeholder="Room Number">
+            </div>
+            <button class="btn-primary w-100" id="checkout-btn" disabled>Place Order</button>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="auth-modal">
+        <div class="glass-panel modal-content">
+            <button class="btn-close modal-close"><i class="fa-solid fa-times"></i></button>
+            <h2 class="modal-title" id="auth-title">Sign In</h2>
+            <form id="auth-form" class="auth-form">
+                <div class="input-group" id="auth-name-group" style="display: none;">
+                    <label>Full Name</label>
+                    <input type="text" id="auth-name" placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" required placeholder="name@example.com">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn-primary w-100 mt-2" id="auth-submit-btn">Sign In</button>
+                <p class="auth-switch"><span id="auth-switch-text">Don't have an account?</span> <a href="javascript:void(0)" id="switch-signup">Create one</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- ░░ AI CONCIERGE CHAT WIDGET ░░ -->
+
+    <!-- FAB Trigger Button -->
+    <button id="concierge-fab" aria-label="Open AI Concierge Chat" title="Chat with Aurelia, your AI Concierge">
+        <i class="fa-solid fa-robot" id="concierge-fab-icon"></i>
+        <span class="concierge-fab-badge" id="concierge-fab-badge">AI</span>
+    </button>
+
+    <!-- Chat Panel -->
+    <div id="concierge-panel" role="dialog" aria-modal="true" aria-label="Aurelia AI Concierge">
+        <div id="concierge-header">
+            <div class="concierge-header-info">
+                <div class="concierge-avatar">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <div class="concierge-name">Aurelia</div>
+                    <div class="concierge-status" id="concierge-status-dot">● AI Concierge · Online</div>
+                </div>
+            </div>
+            <button id="concierge-close" aria-label="Close chat">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+
+        <div id="concierge-messages" role="log" aria-live="polite">
+            <!-- Initial greeting -->
+            <div class="msg msg-ai">
+                <div class="msg-bubble">
+                    Welcome to <strong>The Grand Aurelia</strong>! 👋<br>
+                    I'm <em>Aurelia</em>, your personal AI Concierge. How can I assist you today?
+                </div>
+                <div class="msg-time">Just now</div>
+            </div>
+        </div>
+
+        <div id="concierge-input-area">
+            <div class="concierge-suggestions" id="concierge-suggestions">
+                <button class="sugg-chip" data-q="What time is breakfast?">🍳 Breakfast hours</button>
+                <button class="sugg-chip" data-q="Tell me about the spa services">💆 Spa info</button>
+                <button class="sugg-chip" data-q="What is the Wi-Fi password?">📶 Wi-Fi</button>
+                <button class="sugg-chip" data-q="What time is check-out?">🕛 Check-out</button>
+            </div>
+            <div class="concierge-input-row">
+                <input type="text"
+                       id="concierge-input"
+                       placeholder="Ask me anything…"
+                       autocomplete="off"
+                       maxlength="500"
+                       aria-label="Your message to Aurelia">
+                <button id="concierge-send" aria-label="Send message">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ░░ CONCIERGE STYLES ░░ -->
+    <style>
+        /* ── FAB Button ────────────────────────────────── */
+        #concierge-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1200;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #c9a84c 0%, #f0d080 50%, #c9a84c 100%);
+            color: #1a1205;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 4px 24px rgba(201,168,76,0.5), 0 0 0 0 rgba(201,168,76,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            animation: fab-pulse 3s infinite;
+        }
+        #concierge-fab:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(201,168,76,0.7); }
+        #concierge-fab:active { transform: scale(0.95); }
+        @keyframes fab-pulse {
+            0%,100% { box-shadow: 0 4px 24px rgba(201,168,76,0.5), 0 0 0 0 rgba(201,168,76,0.4); }
+            50%      { box-shadow: 0 4px 24px rgba(201,168,76,0.5), 0 0 0 10px rgba(201,168,76,0); }
+        }
+        .concierge-fab-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff4757;
+            color: #fff;
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 8px;
+            letter-spacing: 0.04em;
+        }
+
+        /* ── Chat Panel ────────────────────────────────── */
+        #concierge-panel {
+            position: fixed;
+            bottom: 6.5rem;
+            right: 2rem;
+            z-index: 1200;
+            width: 360px;
+            max-height: 540px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(15,12,8,0.92);
+            border: 1px solid rgba(201,168,76,0.25);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08);
+            backdrop-filter: blur(20px);
+            transform: scale(0.85) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), opacity 0.25s ease;
+        }
+        #concierge-panel.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ── Header ────────────────────────────────────── */
+        #concierge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+            border-bottom: 1px solid rgba(201,168,76,0.15);
+            flex-shrink: 0;
+        }
+        .concierge-header-info { display: flex; align-items: center; gap: 0.75rem; }
+        .concierge-avatar {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c9a84c, #f0d080);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem;
+            color: #1a1205;
+            flex-shrink: 0;
+        }
+        .concierge-name { font-weight: 600; font-size: 1rem; color: #f0d080; letter-spacing: 0.02em; }
+        .concierge-status { font-size: 0.72rem; color: #4ade80; margin-top: 2px; }
+        #concierge-close {
+            background: none; border: none; color: rgba(255,255,255,0.5);
+            font-size: 1.1rem; cursor: pointer; padding: 4px 6px; border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+        #concierge-close:hover { color: #fff; background: rgba(255,255,255,0.06); }
+
+        /* ── Messages ──────────────────────────────────── */
+        #concierge-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            scroll-behavior: smooth;
+        }
+        #concierge-messages::-webkit-scrollbar { width: 4px; }
+        #concierge-messages::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.25); border-radius: 2px; }
+
+        .msg { display: flex; flex-direction: column; max-width: 85%; }
+        .msg-ai { align-self: flex-start; }
+        .msg-user { align-self: flex-end; }
+        .msg-bubble {
+            padding: 0.65rem 0.9rem;
+            border-radius: 14px;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        .msg-ai .msg-bubble {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #e8e0d0;
+            border-bottom-left-radius: 4px;
+        }
+        .msg-user .msg-bubble {
+            background: linear-gradient(135deg, #c9a84c22, #c9a84c44);
+            border: 1px solid rgba(201,168,76,0.3);
+            color: #f5ead0;
+            border-bottom-right-radius: 4px;
+        }
+        .msg-time { font-size: 0.68rem; color: rgba(255,255,255,0.3); margin-top: 4px; }
+        .msg-ai .msg-time { padding-left: 4px; }
+        .msg-user .msg-time { padding-right: 4px; text-align: right; }
+
+        /* Typing indicator */
+        .msg-typing .msg-bubble { display: flex; align-items: center; gap: 5px; min-height: 36px; }
+        .typing-dot {
+            width: 7px; height: 7px;
+            background: rgba(201,168,76,0.7);
+            border-radius: 50%;
+            animation: typing-bounce 1.2s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing-bounce {
+            0%,60%,100% { transform: translateY(0); }
+            30%          { transform: translateY(-6px); }
+        }
+
+        /* ── Suggestions ───────────────────────────────── */
+        .concierge-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 0.6rem 1rem 0;
+        }
+        .sugg-chip {
+            background: rgba(201,168,76,0.08);
+            border: 1px solid rgba(201,168,76,0.2);
+            color: #d4b96a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            white-space: nowrap;
+        }
+        .sugg-chip:hover { background: rgba(201,168,76,0.18); border-color: rgba(201,168,76,0.4); }
+
+        /* ── Input Row ─────────────────────────────────── */
+        #concierge-input-area {
+            padding: 0.6rem 1rem 1rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            flex-shrink: 0;
+        }
+        .concierge-input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        #concierge-input {
+            flex: 1;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 0.6rem 0.85rem;
+            color: #fff;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        #concierge-input:focus { border-color: rgba(201,168,76,0.5); }
+        #concierge-input::placeholder { color: rgba(255,255,255,0.3); }
+        #concierge-send {
+            background: linear-gradient(135deg, #c9a84c, #e8c96a);
+            border: none;
+            border-radius: 12px;
+            width: 42px;
+            color: #1a1205;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        #concierge-send:hover { opacity: 0.9; transform: scale(1.05); }
+        #concierge-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        /* ── Responsive ────────────────────────────────── */
+        @media (max-width: 480px) {
+            #concierge-panel { width: calc(100vw - 2rem); right: 1rem; bottom: 5.5rem; }
+            #concierge-fab   { bottom: 1.5rem; right: 1.5rem; }
+        }
+    </style>
+
+    <!-- ░░ CONCIERGE SCRIPT ░░ -->
+    <script>
+    (function() {
+        'use strict';
+
+        const API_URL  = 'http://127.0.0.1:5000/api/concierge-chat';
+        const panel    = document.getElementById('concierge-panel');
+        const fab      = document.getElementById('concierge-fab');
+        const closeBtn = document.getElementById('concierge-close');
+        const messages = document.getElementById('concierge-messages');
+        const input    = document.getElementById('concierge-input');
+        const sendBtn  = document.getElementById('concierge-send');
+        const suggs    = document.querySelectorAll('.sugg-chip');
+
+        let isOpen     = false;
+        let isBusy     = false;
+
+        /* ── Open / close ─────────────────────────── */
+        function togglePanel() {
+            isOpen = !isOpen;
+            panel.classList.toggle('open', isOpen);
+            fab.setAttribute('aria-expanded', String(isOpen));
+            if (isOpen) {
+                input.focus();
+                scrollBottom();
+                // Hide suggestions once user has chatted
+                if (messages.querySelectorAll('.msg-user').length > 0) {
+                    document.getElementById('concierge-suggestions').style.display = 'none';
+                }
+            }
+        }
+
+        fab.addEventListener('click', togglePanel);
+        closeBtn.addEventListener('click', () => { isOpen = true; togglePanel(); });
+
+        /* ── Quick-suggestion chips ───────────────── */
+        suggs.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const q = chip.dataset.q;
+                if (q) sendMessage(q);
+                document.getElementById('concierge-suggestions').style.display = 'none';
+            });
+        });
+
+        /* ── Enter key ────────────────────────────── */
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+        });
+        sendBtn.addEventListener('click', send);
+
+        /* ── Send flow ────────────────────────────── */
+        function send() {
+            const q = input.value.trim();
+            if (!q || isBusy) return;
+            input.value = '';
+            sendMessage(q);
+        }
+
+        async function sendMessage(question) {
+            if (isBusy) return;
+            isBusy = true;
+            sendBtn.disabled = true;
+
+            // Append user bubble
+            appendMessage(question, 'user');
+
+            // Show typing indicator
+            const typingId = 'typing-' + Date.now();
+            appendTyping(typingId);
+
+            try {
+                const res = await fetch(API_URL, {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ question }),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || `Server error ${res.status}`);
+                }
+
+                removeTyping(typingId);
+                appendMessage(data.reply, 'ai', data.mode);
+
+            } catch (err) {
+                removeTyping(typingId);
+                appendMessage(
+                    'I\'m sorry, I\'m having trouble connecting right now. '
+                    + 'Please contact our front desk at ext. 0 for immediate assistance.',
+                    'ai'
+                );
+                console.warn('[Concierge] Error:', err.message);
+            } finally {
+                isBusy = false;
+                sendBtn.disabled = false;
+                input.focus();
+                scrollBottom();
+            }
+        }
+
+        /* ── DOM helpers ──────────────────────────── */
+        function appendMessage(text, role, mode) {
+            const now  = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const div  = document.createElement('div');
+            div.className = `msg msg-${role}`;
+
+            const modeTag = (role === 'ai' && mode === 'openai')
+                ? ' <span style="font-size:0.65rem;opacity:0.4;">GPT</span>' : '';
+
+            div.innerHTML = `
+                <div class="msg-bubble">${escapeHtml(text).replace(/\n/g, '<br>')}${modeTag}</div>
+                <div class="msg-time">${now}</div>
+            `;
+            messages.appendChild(div);
+            scrollBottom();
+        }
+
+        function appendTyping(id) {
+            const div = document.createElement('div');
+            div.className = 'msg msg-ai msg-typing';
+            div.id = id;
+            div.innerHTML = `
+                <div class="msg-bubble">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>`;
+            messages.appendChild(div);
+            scrollBottom();
+        }
+
+        function removeTyping(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function scrollBottom() {
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+    })();
+    </script>
+    <!-- ░░ END CONCIERGE WIDGET ░░ -->
+
+    <!-- Application Logic -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/rooms.js"></script>
+    <script src="js/services.js"></script>
+    <!-- SOS Real-Time Module -->
+    <script src="js/admin-sos.js"></script>
+</body>
+</html>

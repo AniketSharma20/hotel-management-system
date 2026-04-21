@@ -1,0 +1,359 @@
+/* ============================================================
+   SOS Emergency Module Styles
+   The Grand Aurelia – Hotel Management System
+   ============================================================ */
+
+/* ── SOS Panel Container ────────────────────────────────────── */
+#sos-panel {
+    background: linear-gradient(135deg,
+        rgba(255, 30, 60, 0.08) 0%,
+        rgba(20, 20, 35, 0.95) 100%);
+    border: 1px solid rgba(255, 50, 80, 0.25);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+#sos-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff1e3c, #ff6b35, #ff1e3c);
+    background-size: 200% 100%;
+    animation: sosHeaderPulse 2s linear infinite;
+}
+
+@keyframes sosHeaderPulse {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* ── SOS Panel Header ───────────────────────────────────────── */
+.sos-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.sos-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ff4060;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.sos-panel-title .sos-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 30, 60, 0.15);
+    border: 1px solid rgba(255, 30, 60, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: sosIconPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes sosIconPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 30, 60, 0.5); transform: scale(1); }
+    50%       { box-shadow: 0 0 0 10px rgba(255, 30, 60, 0); transform: scale(1.08); }
+}
+
+/* ── Status Badge ───────────────────────────────────────────── */
+.sos-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.35rem 0.9rem;
+    border-radius: 20px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+    transition: all 0.3s ease;
+}
+
+.sos-status-badge.connecting {
+    background: rgba(251, 191, 36, 0.12);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+}
+
+.sos-status-badge.disconnected {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.sos-status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.sos-status-badge:not(.connecting):not(.disconnected) .sos-status-dot {
+    animation: blink 1.4s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+}
+
+/* ── Alert Feed ─────────────────────────────────────────────── */
+.sos-alert-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.sos-alert-feed::-webkit-scrollbar        { width: 5px; }
+.sos-alert-feed::-webkit-scrollbar-track  { background: rgba(255,255,255,0.03); border-radius: 3px; }
+.sos-alert-feed::-webkit-scrollbar-thumb  { background: rgba(255, 60, 80, 0.4); border-radius: 3px; }
+
+/* ── Empty State ────────────────────────────────────────────── */
+.sos-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3rem 1rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+
+.sos-empty-state i { font-size: 2.5rem; }
+.sos-empty-state p { font-size: 0.9rem; }
+
+/* ── Individual Alert Card ──────────────────────────────────── */
+.sos-alert-card {
+    background: rgba(255, 30, 60, 0.06);
+    border: 1px solid rgba(255, 30, 60, 0.3);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    animation: alertSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: border-color 0.3s, background 0.3s;
+}
+
+.sos-alert-card.new-alert {
+    border-color: #ff1e3c;
+    background: rgba(255, 30, 60, 0.12);
+    box-shadow: 0 0 20px rgba(255, 30, 60, 0.2), inset 0 0 30px rgba(255, 30, 60, 0.04);
+}
+
+.sos-alert-card.acknowledged {
+    border-color: rgba(251, 191, 36, 0.4);
+    background: rgba(251, 191, 36, 0.05);
+}
+
+.sos-alert-card.resolved {
+    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.04);
+    opacity: 0.65;
+}
+
+@keyframes alertSlideIn {
+    from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0)     scale(1);    }
+}
+
+/* ── Alert Card – Room Badge ────────────────────────────────── */
+.sos-room-badge {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    background: rgba(255, 30, 60, 0.15);
+    border: 1px solid rgba(255, 30, 60, 0.5);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: #ff4060;
+    font-weight: 800;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.sos-room-badge span { font-size: 1rem; line-height: 1; }
+
+.sos-alert-card.acknowledged .sos-room-badge { color: #fbbf24; border-color: rgba(251,191,36,0.5); background: rgba(251,191,36,0.1); }
+.sos-alert-card.resolved    .sos-room-badge { color: #22c55e; border-color: rgba(34,197,94,0.5);  background: rgba(34,197,94,0.08); }
+
+/* ── Alert Card – Info ──────────────────────────────────────── */
+.sos-alert-info { overflow: hidden; }
+
+.sos-alert-message {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #ff6070;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sos-alert-card.acknowledged .sos-alert-message { color: #fbbf24; }
+.sos-alert-card.resolved    .sos-alert-message { color: #22c55e; }
+
+.sos-alert-meta {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.45);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.sos-alert-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+/* ── Alert Card – Actions ───────────────────────────────────── */
+.sos-alert-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.sos-btn-ack,
+.sos-btn-resolve {
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.sos-btn-ack {
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    color: #fbbf24;
+}
+.sos-btn-ack:hover {
+    background: rgba(251, 191, 36, 0.3);
+    transform: translateY(-1px);
+}
+
+.sos-btn-resolve {
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    color: #22c55e;
+}
+.sos-btn-resolve:hover {
+    background: rgba(34, 197, 94, 0.25);
+    transform: translateY(-1px);
+}
+
+/* ── Test SOS Button ────────────────────────────────────────── */
+.sos-test-btn {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 30, 60, 0.12);
+    border: 1px solid rgba(255, 30, 60, 0.35);
+    border-radius: 8px;
+    color: #ff4060;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.sos-test-btn:hover {
+    background: rgba(255, 30, 60, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 30, 60, 0.2);
+}
+
+/* ── Emergency Banner Overlay ──────────────────────────────── */
+#sos-emergency-banner {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9999;
+    transform: translateY(-100%);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    background: linear-gradient(90deg, #c0392b, #ff1e3c, #c0392b);
+    background-size: 200% 100%;
+    animation: bannerPulse 1.5s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 2rem;
+    box-shadow: 0 4px 30px rgba(255, 30, 60, 0.5);
+    gap: 1rem;
+}
+
+#sos-emergency-banner.active { transform: translateY(0); }
+
+@keyframes bannerPulse {
+    0%, 100% { background-position: 0% 50%; }
+    50%       { background-position: 100% 50%; }
+}
+
+.sos-banner-text {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+.sos-banner-text .sos-blink-icon {
+    animation: iconFlash 0.6s steps(1) infinite;
+}
+
+@keyframes iconFlash {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+.sos-banner-dismiss {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    color: #fff;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+.sos-banner-dismiss:hover { background: rgba(255,255,255,0.25); }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .sos-alert-card {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+    }
+    .sos-alert-actions {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    .sos-panel-header { flex-direction: column; align-items: flex-start; }
+}
