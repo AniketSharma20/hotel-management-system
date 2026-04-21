@@ -667,8 +667,127 @@
 
         /* ── Responsive ────────────────────────────────── */
         @media (max-width: 480px) {
-            #concierge-panel { width: calc(100vw - 2rem); right: 1rem; bottom: 5.5rem; }
-            #concierge-fab   { bottom: 1.5rem; right: 1.5rem; }
+            #concierge-panel {
+                width: calc(100vw - 1.5rem);
+                right: 0.75rem;
+                left: 0.75rem;
+                bottom: 5rem;
+                max-height: 70vh;
+                border-radius: 16px;
+            }
+            #concierge-fab   { bottom: 1.2rem; right: 1.2rem; width: 52px; height: 52px; font-size: 1.2rem; }
+            .sugg-chip { font-size: 0.7rem; padding: 3px 8px; }
+        }
+    </style>
+
+    <!-- ░░ MOBILE RESPONSIVE FIXES ░░ -->
+    <style>
+        /* ── Navbar mobile ─────────────────────────────── */
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem 4%; }
+            .brand h1 { font-size: 1rem; }
+            .nav-actions .btn-primary { padding: 0.45rem 0.9rem; font-size: 0.8rem; }
+            .app-container { padding: 1.5rem 4%; }
+        }
+
+        /* ── Hero section ──────────────────────────────── */
+        @media (max-width: 768px) {
+            .hero-section { min-height: auto; gap: 1.5rem; padding-top: 1rem; }
+            .hero-title   { font-size: 2.2rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .hero-image-wrapper { height: 220px; width: 100%; }
+            .hero-actions { flex-wrap: wrap; gap: 0.75rem; }
+            .btn-large { padding: 0.7rem 1.4rem; font-size: 0.95rem; }
+            .stats-card { gap: 0.75rem; padding: 1rem; font-size: 0.85rem; }
+            .stat h3 { font-size: 1.1rem; }
+        }
+        @media (max-width: 480px) {
+            .hero-title   { font-size: 1.8rem; }
+            .hero-image-wrapper { height: 180px; }
+        }
+
+        /* ── Quick access grid ─────────────────────────── */
+        @media (max-width: 600px) {
+            .quick-access { grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+            .qa-card { padding: 1.25rem 1rem; }
+            .qa-card i { font-size: 1.8rem; }
+            .qa-card h3 { font-size: 1rem; }
+        }
+
+        /* ── Dashboard highlights ──────────────────────── */
+        @media (max-width: 768px) {
+            .dashboard-highlights {
+                flex-direction: column !important;
+                padding: 1.5rem !important;
+                gap: 1.5rem !important;
+                text-align: center;
+            }
+            .dashboard-highlights > div:last-child { grid-template-columns: 1fr 1fr; }
+            .dashboard-highlights img { height: 130px !important; }
+        }
+
+        /* ── Booking bar ───────────────────────────────── */
+        @media (max-width: 768px) {
+            .booking-bar {
+                flex-direction: column !important;
+                padding: 1.25rem !important;
+                gap: 0.75rem !important;
+                align-items: stretch !important;
+            }
+            .booking-bar .input-group { margin-bottom: 0; }
+            .booking-bar .btn-primary { width: 100%; padding: 0.75rem; }
+        }
+
+        /* ── Section header ────────────────────────────── */
+        @media (max-width: 600px) {
+            .section-header h2 { font-size: 1.8rem; }
+            .section-header p  { font-size: 0.95rem; }
+            .section-header    { margin-bottom: 1.5rem; }
+        }
+
+        /* ── Admin grid ────────────────────────────────── */
+        @media (max-width: 900px) {
+            .admin-grid { grid-template-columns: 1fr !important; }
+        }
+
+        /* ── Services grid ─────────────────────────────── */
+        @media (max-width: 600px) {
+            .services-grid { grid-template-columns: 1fr !important; }
+            .service-card  { flex-direction: column !important; }
+            .service-img   { width: 100% !important; height: 160px !important; }
+        }
+
+        /* ── Contact grid ──────────────────────────────── */
+        @media (max-width: 768px) {
+            .contact-grid   { gap: 1.5rem; }
+            .contact-info   { padding: 1.5rem; }
+            .contact-map    { min-height: 220px; }
+        }
+
+        /* ── Modal full-screen on mobile ───────────────── */
+        @media (max-width: 480px) {
+            .modal-content { max-width: 100% !important; margin: 1rem; border-radius: 16px; padding: 2rem 1.5rem; }
+        }
+
+        /* ── Toast bottom clearance (above FAB) ────────── */
+        @media (max-width: 600px) {
+            #toast-container { bottom: 5.5rem; right: 1rem; left: 1rem; }
+            .toast { font-size: 0.85rem; padding: 0.75rem 1rem; }
+        }
+
+        /* ── SOS panel header wrap on mobile ───────────── */
+        @media (max-width: 600px) {
+            .sos-panel-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.75rem !important;
+            }
+        }
+
+        /* ── Rooms grid ────────────────────────────────── */
+        @media (max-width: 600px) {
+            .rooms-grid { grid-template-columns: 1fr !important; }
+            .menu-grid  { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
         }
     </style>
 
@@ -677,7 +796,12 @@
     (function() {
         'use strict';
 
-        const API_URL  = 'http://127.0.0.1:5000/api/concierge-chat';
+        // ⚠️ Use your PC's local network IP so phones on the same Wi-Fi can connect.
+        // Run `ipconfig` (Windows) to find your IPv4 address if this changes.
+        const API_BASE = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+            ? 'http://127.0.0.1:5000'          // desktop browser
+            : 'http://192.168.1.7:5000';        // phone / tablet on same Wi-Fi
+        const API_URL  = API_BASE + '/api/concierge-chat';
         const panel    = document.getElementById('concierge-panel');
         const fab      = document.getElementById('concierge-fab');
         const closeBtn = document.getElementById('concierge-close');

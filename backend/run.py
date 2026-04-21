@@ -47,4 +47,6 @@ if __name__ == '__main__':
     print("[SERVER] Starting Flask-SocketIO server on http://127.0.0.1:5000")
     print("[SERVER] Real-time SOS WebSocket endpoint is active.")
     # socketio.run() replaces app.run() for WebSocket support
-    socketio.run(app, debug=True, host='127.0.0.1', port=5000)
+    # host='0.0.0.0' allows phones on the same Wi-Fi to connect (e.g. 192.168.1.7:5000)
+    # Change back to '127.0.0.1' if you only need local desktop access
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
